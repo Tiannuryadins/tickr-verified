@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TICKR Verified — a transparent agent, now verifiable</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+  <h1>TICKR <span class="verified">Verified</span></h1>
+  <p class="tagline">A transparent paper-trading agent — now with a verifiable identity on Concordium testnet.</p>
+  <p class="mode-note"><strong>Demo page.</strong> Badge checks below run against the <em>live</em> Concordium testnet (no key needed). The accountability log shown is <em>mock demo data</em> — the real log lives on-chain once the agent is registered (see STATUS.md).</p>
+</header>
+
+<main>
+<section id="story">
+  <h2>The gap this closes</h2>
+  <p>TICKR paper-trades Coinbase tokenized stocks and logs every decision — plus a keccak256 hash of its reasoning — to a public journal on Base Sepolia. But that journal is <strong>unauthenticated</strong>: anyone can log entries, and nothing proves <em>which</em> agent made a decision or that a verified human stands behind it.</p>
+  <p>Concordium fixes exactly that. TICKR is registered in the <strong>CIS-8004 Agent Registry</strong> with a <strong>Verified by Concordium badge</strong>, its Base key is bound via <strong>CIS-8</strong>, and every decision is anchored in an on-chain accountability log — so anyone can verify: decision → reason hash → Concordium log entry → verified badge → Agent Card.</p>
+  <ul class="chain">
+    <li>Decision + reasoning text</li>
+    <li>keccak256(reasoning) = reason hash</li>
+    <li>Record at <code>tickr.log.&lt;seq&gt;</code> on the agent token</li>
+    <li>Badge: owner + <code>Active</code> + card SHA-256 == on-chain hash</li>
+  </ul>
+</section>
+
+<section id="badge">
+  <h2>1 · Badge verification (live testnet)</h2>
+  <p>Resolve any Verified by Concordium badge against the real testnet registry. The default is a known-good live badge (token 1211, another builder's demo agent) — try it, then try token 0's badge <code>JyP9TtQC3HCNrTYR3sc2T</code>, whose card is gone: the verifier must honestly report it invalid.</p>
+  <form id="badge-form">
+    <label for="badge-input">Badge (short form)</label>
+    <input id="badge-input" type="text" value="JyP9XR6EkrzHnx9g177u9" spellcheck="false" autocomplete="off">
+    <button type="submit">Verify on live testnet</button>
+  </form>
+  <div id="badge-result" class="result" aria-live="polite"></div>
+</section>
+
+<section id="log">
+  <h2>2 · Accountability log (mock demo data)</h2>
+  <p>Each TICKR decision becomes one <code>setMetadata</code> entry on the agent token: key <code>tickr.log.&lt;seq&gt;</code>, value a compact JSON record (≤ 512 bytes). <code>tickr.log.head</code> points at the latest entry. Below are the entries from the mock demo run (<code>node scripts/demo.js</code>) — labelled MOCK, not real transactions.</p>
+  <div id="log-entries"></div>
+  <details>
+    <summary>How to verify an entry (no key needed)</summary>
+    <ol>
+      <li>Re-run the agent on the same inputs and recompute <code>keccak256(reasoning text)</code> — it must equal the record's <code>h</code>.</li>
+      <li>Read <code>tickr.log.&lt;seq&gt;</code> from the agent token (<code>get_metadata</code> MCP tool) — the record must be there.</li>
+      <li>Resolve the badge (section 1): owner + <code>Active</code> + card hash match.</li>
+    </ol>
+  </details>
+</section>
+
+<section id="card">
+  <h2>3 · Agent Card</h2>
+  <p>The ERC-8004 / A2A Agent Card. Its exact served bytes are hashed (SHA-256) and pinned on-chain as the agent's <code>metadata_hash</code>. This copy is pre-registration, so the badge extension carries <code>"tokenAddress": null</code> — never a fake badge. After registration the card is rebuilt with the real badge and re-pinned.</p>
+  <div id="card-hash" class="result" aria-live="polite"></div>
+  <pre id="card-json"><code>Loading agent-card.json… (serve this folder with a static server, e.g. python3 -m http.server)</code></pre>
+</section>
+
+<section id="links">
+  <h2>Links</h2>
+  <ul>
+    <li>Testnet explorer: <a href="https://testnet.ccdscan.io">testnet.ccdscan.io</a></li>
+    <li>Agent Registry (CIS-8004) on testnet: <a href="https://testnet.ccdscan.io/contract/12802/0">contract &lt;12802, 0&gt;</a></li>
+    <li>External Key Registry (CIS-8) on testnet: <a href="https://testnet.ccdscan.io/contract/12801/0">contract &lt;12801, 0&gt;</a></li>
+    <li>Badge spec: <a href="https://docs.concordium.com/en/mainnet/technical-reference/agent-registry/concordium-badge.html">docs.concordium.com — Verified by Concordium badge</a></li>
+    <li>Hackathon: Concordium × Encode Club Trusted Agents Hackathon</li>
+  </ul>
+  <p class="fineprint">Testnet only. Paper trading only — no real stocks are bought or sold. Not investment advice. TICKR's Base entry: <a href="https://github.com/Tiannuryadins/tickr-agent">github.com/Tiannuryadins/tickr-agent</a>.</p>
+</section>
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>

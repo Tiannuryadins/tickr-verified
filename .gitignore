@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+
+# NEVER commit keys or wallet material of any kind.
+*.export
+*.key
+*.pem
+*.mnemonic
+.env
+.env.*
+
+# Local working state (mock chain + registration) — machine-local, not the entry.
+.mock-chain-state.json
+.tickr-registration.json
+
+# OS / editor noise
+.DS_Store

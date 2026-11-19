@@ -1,0 +1,73 @@
+{
+  "type": "https://eips.ethereum.org/EIPS/eip-8004#registration-v1",
+  "name": "TICKR Verified",
+  "description": "TICKR is a transparent rule-based agent that paper-trades Coinbase tokenized stocks on Base Sepolia. Every decision carries its reasons and a keccak256 hash of the reasoning text. This Concordium layer adds what the public Base journal cannot: a verified identity. TICKR registers in the Concordium Agent Registry (CIS-8004) for a Verified by Concordium badge, binds its Base agent key via CIS-8, and anchors every decision in an on-chain accountability log on Concordium testnet — so anyone can verify WHICH agent made a decision and that a verified human stands behind it. Testnet only; paper trading; not investment advice.",
+  "url": "https://tiannuryadins.github.io/tickr-verified/agent-card.json",
+  "version": "1.0.0",
+  "provider": {
+    "organization": "TICKR",
+    "url": "https://github.com/Tiannuryadins/tickr-verified"
+  },
+  "capabilities": {
+    "extensions": [
+      {
+        "uri": "https://docs.concordium.com/a2a-extensions/concordium-badge/v1",
+        "description": "Verified by Concordium badge — on-chain agent identity in a CIS-8004 registry",
+        "required": false,
+        "params": {
+          "tokenAddress": null,
+          "owner": {
+            "account": null
+          },
+          "agentWallet": null,
+          "contracts": {
+            "cis8004": "ccd:4221332d34e1694168c2a0c0b3fd0f27:12802.0",
+            "cis8": "ccd:4221332d34e1694168c2a0c0b3fd0f27:12801.0"
+          },
+          "verify": "Resolve tokenAddress via CIS-8004 agent_of; confirm owner + status=Active + card SHA-256 == metadata_hash.",
+          "verification": {
+            "service": "Concordium Agent Registry",
+            "mcp": "https://agent-registry-mcp.concordium.com/mcp",
+            "docs": "https://docs.concordium.com/en/mainnet/technical-reference/agent-registry/concordium-badge.html"
+          }
+        }
+      }
+    ]
+  },
+  "role": "trader",
+  "skills": [
+    {
+      "id": "analyze-tokenized-stocks",
+      "name": "Analyze tokenized stocks",
+      "description": "Scores Coinbase tokenized stocks by published transparent rules (NAV freshness, supply depth, drift vs last snapshot) and emits BUY/HOLD/AVOID signals with reasons.",
+      "tags": [
+        "research",
+        "tokenized-stocks",
+        "transparent-rules"
+      ]
+    },
+    {
+      "id": "paper-trade-with-reason-hash",
+      "name": "Paper-trade with reason hash",
+      "description": "Paper-trades at NAV reference prices and logs each decision plus a keccak256 hash of its reasoning text, first to the Base Sepolia TradeJournal and then to the Concordium accountability log.",
+      "tags": [
+        "paper-trading",
+        "accountability",
+        "base-sepolia"
+      ]
+    },
+    {
+      "id": "verify-concordium-badge",
+      "name": "Verify a Concordium badge",
+      "description": "Resolves a Verified by Concordium badge on-chain (owner, Active status) and checks the Agent Card SHA-256 against the on-chain metadata_hash.",
+      "tags": [
+        "verification",
+        "concordium-badge",
+        "cis-8004"
+      ]
+    }
+  ],
+  "active": true,
+  "x402Support": false,
+  "registrations": []
+}
